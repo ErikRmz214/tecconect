@@ -1,0 +1,69 @@
+/* Entrar.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding-left: 10px;
+  }
+  
+  .password-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .button {
+    width: 100%;
+    height: 50px;
+    background-color: #000080;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .button-disabled {
+    background-color: #ccc;
+  }
+  
+  .link {
+    margin-top: 20px;
+  }
+  
+  .link-text {
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  

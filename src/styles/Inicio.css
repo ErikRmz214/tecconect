@@ -1,0 +1,52 @@
+.container {
+  display: flex; /* Usa flexbox para un diseño flexible */
+  flex-direction: column; /* Organiza los elementos en una columna */
+  justify-content: center; /* Centra los elementos verticalmente */
+  align-items: center; /* Centra los elementos horizontalmente */
+  background-color: #fff;
+  padding: 5%;
+}
+
+.image {
+  width: 50%; /* La imagen ocupará el 50% del ancho de la pantalla */
+  height: 30vh; /* La altura será el 30% de la altura de la pantalla */
+  margin-bottom: 5%; /* Espacio debajo de la imagen */
+  object-fit: contain; /* Mantiene la proporción de la imagen */
+}
+
+.title {
+  font-size: 6vw; /* Tamaño del texto basado en el ancho de la pantalla */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2vh; /* Margen debajo del título */
+}
+
+.subtitle {
+  font-size: 5vw; /* Tamaño del subtítulo ajustado al ancho */
+  text-align: center;
+  margin-bottom: 5vh; /* Margen debajo del subtítulo */
+}
+
+.button-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row; /* Los botones estarán en fila */
+  justify-content: space-evenly; /* Alinea los botones de forma equitativa */
+  margin-top: 5vh; /* Margen superior antes de los botones */
+}
+
+.button {
+  background-color: #000080;
+  padding: 2vh 10vw; /* Relleno vertical basado en la altura de la pantalla */
+  border-radius: 5px;
+  color: white;
+  font-size: 4vw;
+  cursor: pointer;
+}
+
+.link {
+  color: #007BFF;
+  font-size: 4vw;
+  margin-top: 3vh;
+  text-decoration: underline; /* Subrayado para indicar que es un enlace */
+}
