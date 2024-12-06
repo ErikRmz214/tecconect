@@ -10,7 +10,7 @@ function Archivos() {
 
   // Obtener todos los proyectos al cargar la pantalla
   useEffect(() => {
-    fetch("https://app-tq3o5pftgq-uc.a.run.app/api/proyects")
+    fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/proyects")
       .then((response) => response.json())
       .then((data) => setProyectos(data))
       .catch((error) => console.error("Error al obtener proyectos:", error));
@@ -26,7 +26,7 @@ function Archivos() {
       degree: "Grado", // Agregar aquí el grado si es necesario
     };
 
-    fetch("https://app-tq3o5pftgq-uc.a.run.app/api/new-proyect", {
+    fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/new-proyect", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

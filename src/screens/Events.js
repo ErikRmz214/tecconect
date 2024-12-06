@@ -38,7 +38,7 @@ function Events() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("https://app-tq3o5pftgq-uc.a.run.app/api/events");
+        const response = await fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/events");
         const data = await response.json();
         setEvents(data);
       } catch (error) {

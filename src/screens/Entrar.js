@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Cambio a useNavigate en lugar de useHistory
-import "../styles/Entrar.css"; // Agrega tu archivo CSS para los estilos
+import { useNavigate } from "react-router-dom";
 
 function Entrar() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Estado para el indicador de carga
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar u ocultar la contraseña
-  const navigate = useNavigate(); // Usar useNavigate para la navegación en React Router v6
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -18,7 +17,7 @@ function Entrar() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://app-tq3o5pftgq-uc.a.run.app/api/login", {
+      const response = await fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,45 +29,41 @@ function Entrar() {
 
       if (response.status === 200) {
         alert("Inicio de sesión exitoso.");
-
-        // Guardar el ID de usuario en localStorage
         localStorage.setItem('userId', data.user.id.toString());
-
-        // Navegar a la pantalla Principal pasando el usuario
         navigate("/principal", { state: { user: data.user } });
       } else {
         alert(data.message || "Credenciales inválidas.");
       }
     } catch (error) {
-      alert("No se pudo conectar con el servidor.");
-      console.error("Error al iniciar sesión:", error);
+      alert("No se pudo conectar con el servidor. Revisa la consola para más detalles.");
+      console.error("Error al iniciar sesión:", error.message || error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container">
-      <h1 className="title">Iniciar sesión</h1>
+    <div style={styles.container}>
+      <h1 style={styles.title}>Iniciar sesión</h1>
 
       <input
         type="email"
-        className="input"
+        style={styles.input}
         placeholder="Correo electrónico"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <div className="password-container">
+      <div style={styles.passwordContainer}>
         <input
           type={showPassword ? "text" : "password"}
-          className="input"
+          style={styles.input}
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
-          className="eye-icon"
+          style={styles.eyeIcon}
           onClick={() => setShowPassword(!showPassword)}
         >
           {showPassword ? "Ocultar" : "Mostrar"}
@@ -76,20 +71,102 @@ function Entrar() {
       </div>
 
       <button
-        className={`button ${loading ? "button-disabled" : ""}`}
+        style={loading ? styles.buttonDisabled : styles.button}
         onClick={handleLogin}
         disabled={loading}
       >
         {loading ? "Cargando..." : "Iniciar sesión"}
       </button>
 
-      <div className="link">
-        <button onClick={() => navigate("/inicio")} className="link-text">
+      <div style={styles.link}>
+        <button onClick={() => navigate("/inicio")} style={styles.linkText}>
           Regresar
         </button>
       </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '40px',
+    backgroundColor: '#f8f8f8',
+    height: '100vh',
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: '32px',
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: '30px',
+  },
+  input: {
+    width: '80%',
+    padding: '12px',
+    marginBottom: '20px',
+    borderRadius: '8px',
+    border: '1px solid #ccc',
+    fontSize: '16px',
+    outline: 'none',
+    transition: 'border-color 0.3s',
+  },
+  inputFocus: {
+    borderColor: '#000080',
+  },
+  passwordContainer: {
+    position: 'relative',
+    width: '80%',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: '10px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    background: 'transparent',
+    border: 'none',
+    color: '#000080',
+    fontSize: '16px',
+    cursor: 'pointer',
+  },
+  button: {
+    backgroundColor: '#000080',
+    color: 'white',
+    padding: '15px 30px',
+    border: 'none',
+    borderRadius: '5px',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+    width: '80%',
+    marginTop: '20px',
+  },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
+    color: 'white',
+    padding: '15px 30px',
+    border: 'none',
+    borderRadius: '5px',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    cursor: 'not-allowed',
+    width: '80%',
+    marginTop: '20px',
+  },
+  link: {
+    marginTop: '20px',
+  },
+  linkText: {
+    backgroundColor: 'transparent',
+    color: '#000080',
+    fontSize: '16px',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+};
 
 export default Entrar;

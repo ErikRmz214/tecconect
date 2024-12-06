@@ -18,7 +18,7 @@ function Perfil() {
       const userId = localStorage.getItem("userId");
 
       if (userId) {
-        const response = await fetch(`https://app-tq3o5pftgq-uc.a.run.app/api/user/${userId}`);
+        const response = await fetch(`http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/user/${userId}`);
         if (!response.ok) {
           throw new Error("Error al obtener los datos del usuario.");
         }
@@ -92,7 +92,7 @@ function Perfil() {
       const userId = localStorage.getItem("userId");
 
       if (userId) {
-        const response = await fetch(`https://app-tq3o5pftgq-uc.a.run.app/api/edit-user/${userId}`, {
+        const response = await fetch(`http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/edit-user/${userId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

@@ -10,7 +10,7 @@ function Eventos() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("https://app-tq3o5pftgq-uc.a.run.app/api/events");
+        const response = await fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/events");
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -50,7 +50,7 @@ function Eventos() {
   if (loading) {
     return (
       <div style={styles.loader}>
-        <ActivityIndicator type="Oval" color="#1E90FF" height={50} width={50} />
+        <Puff type="Oval" color="#1E90FF" height={50} width={50} />
       </div>
     );
   }

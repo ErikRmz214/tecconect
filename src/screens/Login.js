@@ -14,21 +14,22 @@ function Login() {
       setErrorMessage("Please fill out all fields.");
       return;
     }
-
+  
     setLoading(true);
     setErrorMessage(""); // Limpiar cualquier mensaje de error anterior
-
+  
     try {
-      const response = await fetch("https://app-tq3o5pftgq-uc.a.run.app/api/login", {
+      // Cambiar la URL para usar la función de Firebase localmente
+      const response = await fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.status === 200) {
         localStorage.setItem("userId", data.user.id);
         navigate("/main", { state: { user: data.user } });
@@ -42,6 +43,7 @@ function Login() {
       setLoading(false);
     }
   };
+  
 
   // Deshabilitar la función de retroceso del navegador (si es necesario)
   useEffect(() => {

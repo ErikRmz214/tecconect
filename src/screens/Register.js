@@ -17,7 +17,7 @@ const Registration = () => {
     const fetchTechnologicals = async () => {
       setLoading(true);
       try {
-        const response = await fetch('https://app-tq3o5pftgq-uc.a.run.app/api/tecs');
+        const response = await fetch('http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/tecs');
         if (!response.ok) {
           throw new Error('Failed to fetch technologicals');
         }
@@ -60,7 +60,7 @@ const Registration = () => {
     setError(null);
 
     try {
-      const response = await fetch('https://app-tq3o5pftgq-uc.a.run.app/api/new-user', {
+      const response = await fetch('http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/new-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
