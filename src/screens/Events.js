@@ -1,39 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Oval } from "react-loader-spinner"; // Reemplazamos ActivityIndicator por Oval
-
-function EventItem({ event }) {
-  const eventDate = new Date(event.date._seconds * 1000);
-  
-  return (
-    <div style={styles.item}>
-      <img
-        src={require("../images/Solacyt.jpg")}
-        alt={event.name}
-        style={styles.image}
-      />
-      <div style={styles.textContainer}>
-        <h2 style={styles.title}>{event.name}</h2>
-        <p style={styles.description}>{event.description}</p>
-        <p style={styles.date}>Date: {eventDate.toLocaleDateString()}</p>
-        <p
-          style={styles.link}
-          onClick={() =>
-            window.open(
-              "https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj1vb6674yKAxU7MNAFHfFUG2wQFnoECBEQAQ&url=https%3A%2F%2Fsolacyt.org%2F&usg=AOvVaw3d07o5IhCq0Eg_9fDaV_9g&opi=89978449",
-              "_blank"
-            )
-          }
-        >
-          More information
-        </p>
-      </div>
-    </div>
-  );
-}
+import { useNavigate } from "react-router-dom"; // For navigation
+import { Puff } from 'react-loader-spinner'; // Loader component
 
 function Events() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -51,69 +23,125 @@ function Events() {
     fetchEvents();
   }, []);
 
+  const handleLinkPress = (url) => {
+    window.open(url, "_blank");
+  };
+
+  const renderItem = (item) => {
+    const eventDate = new Date(item.date._seconds * 1000); // Convert seconds to milliseconds
+    return (
+      <div style={styles.card} key={item.id}>
+        <img src={require("../images/Solacyt.jpg")} alt="event" style={styles.image} />
+        <div style={styles.content}>
+          <h3 style={styles.title}>{item.name}</h3>
+          <p style={styles.description}>{item.description}</p>
+          <p style={styles.date}>
+            <strong>Date:</strong> {eventDate.toLocaleDateString()}
+          </p>
+          <button
+            style={styles.button}
+            onClick={() =>
+              handleLinkPress("https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwj1vb6674yKAxU7MNAFHfFUG2wQFnoECBEQAQ&url=https%3A%2F%2Fsolacyt.org%2F&usg=AOvVaw3d07o5IhCq0Eg_9fDaV_9g&opi=89978449")
+            }
+          >
+            More Information
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div style={styles.loader}>
-        <Oval type="Oval" color="#1E90FF" height={50} width={50} /> {/* Usamos Oval aquí */}
+        <Puff type="Oval" color="#007BFF" height={80} width={80} />
       </div>
     );
   }
 
   return (
     <div style={styles.container}>
-      {events.map((event) => (
-        <EventItem key={event.id} event={event} />
-      ))}
+      <h1 style={styles.header}>Available Events</h1>
+      <div style={styles.list}>{events.map((item) => renderItem(item))}</div>
     </div>
   );
 }
 
 const styles = {
   container: {
-    padding: 16,
-    backgroundColor: "#f9f9f9",
+    padding: "20px",
+    backgroundColor: "#f5f5f5",
+    minHeight: "100vh",
+    fontFamily: "'Roboto', sans-serif",
   },
-  item: {
+  header: {
+    textAlign: "center",
+    fontSize: "28px",
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: "20px",
+  },
+  list: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+    gap: "20px",
+  },
+  card: {
     display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
+    flexDirection: "column",
+    backgroundColor: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    overflow: "hidden",
+    transition: "transform 0.3s, box-shadow 0.3s",
+  },
+  cardHover: {
+    transform: "scale(1.02)",
+    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-    marginRight: 16,
+    width: "100%",
+    height: "150px",
+    objectFit: "cover",
   },
-  textContainer: {
-    flex: 1,
+  content: {
+    padding: "15px",
   },
   title: {
-    fontSize: "16px",
+    fontSize: "18px",
     fontWeight: "bold",
-    marginBottom: "4px",
+    color: "#007BFF",
+    marginBottom: "10px",
   },
   description: {
     fontSize: "14px",
-    color: "#333",
-    marginBottom: "4px",
+    color: "#555",
+    marginBottom: "10px",
   },
   date: {
-    fontSize: "12px",
-    color: "#555",
-    marginBottom: "8px",
-  },
-  link: {
     fontSize: "14px",
-    color: "#1E90FF",
-    textDecoration: "underline",
+    color: "#888",
+    marginBottom: "15px",
+  },
+  button: {
+    padding: "10px 15px",
+    backgroundColor: "#007BFF",
+    color: "#fff",
+    fontSize: "14px",
+    fontWeight: "bold",
+    border: "none",
+    borderRadius: "5px",
     cursor: "pointer",
+    textAlign: "center",
+    transition: "background-color 0.3s",
+  },
+  buttonHover: {
+    backgroundColor: "#0056b3",
   },
   loader: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f9f9f9",
     height: "100vh",
   },
 };

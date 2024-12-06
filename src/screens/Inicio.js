@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // React Router para navegación
 import '../styles/Inicio.css'; // Aquí debes definir el estilo en CSS
+import LogoImage from '../images/Logo.png';
+
 
 const Inicio = () => {
   const navigate = useNavigate(); // React Router para navegación
@@ -23,7 +25,7 @@ const Inicio = () => {
     <div style={styles.container}>
       {/* Imagen */}
       <img 
-        src="../images/Logo.png" // Utilizamos src para imágenes locales en la web
+        src={LogoImage} // Utilizamos src para imágenes locales en la web
         alt="Logo"
         style={styles.image}
       />
@@ -51,7 +53,7 @@ const Inicio = () => {
       {/* Texto para regresar a la pantalla Idioma */}
       <button 
         style={styles.link} 
-        onClick={() => navigate('/idioma')}
+        onClick={() => navigate('/')}
       >
         Regresar
       </button>

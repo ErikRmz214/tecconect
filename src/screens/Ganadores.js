@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { CircularProgress } from "@mui/material"; // Usamos CircularProgress de Material-UI para el indicador de carga
+import { CircularProgress } from "@mui/material"; 
+import Confetti from 'react-confetti'; // Importar la librería de confetti
 
 function Ganadores() {
   const [winner, setWinner] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Configuración para el confetti
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  
   useEffect(() => {
     const fetchWinner = async () => {
       try {
-        // Simula una respuesta de la API
         const data = {
-          event: "2024-12-01", // Formato de fecha correcto
+          event: "2024-12-01", // Fecha del evento
           name: "Proyecto Innovador",
           integrants: ["Juan Pérez", "María García", "Luis Gómez"],
         };
@@ -42,15 +46,16 @@ function Ganadores() {
     );
   }
 
-  const eventDate = new Date(winner.event).toLocaleDateString("es-ES"); // Verificación de la fecha
+  const eventDate = new Date(winner.event).toLocaleDateString("es-ES");
 
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Ganadores</h2>
+      {winner && <Confetti width={windowWidth} height={windowHeight} />}
       <img
         style={styles.image}
-        src={require("../images/Ganador.jpg")} // Usamos la imagen local
-        alt="Imagen del ganador" // Añadido para accesibilidad
+        src={require("../images/Ganador.jpg")}
+        alt="Imagen del ganador"
       />
       <p style={styles.description}>Evento: {eventDate}</p>
       <p style={styles.description}>Nombre del Proyecto: {winner.name}</p>
@@ -72,29 +77,36 @@ const styles = {
     alignItems: "center",
     padding: "16px",
     backgroundColor: "#f5f5f5",
+    fontFamily: "'Roboto', sans-serif",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    borderRadius: "8px",
   },
   title: {
-    fontSize: "24px",
-    fontWeight: "bold",
+    fontSize: "28px",
+    fontWeight: "600",
     marginBottom: "20px",
     color: "#333",
   },
   image: {
-    width: "300px", // Imagen más grande
-    height: "300px", // Imagen más grande
-    marginBottom: "20px", // Se mantiene el margen inferior para separación
-    objectFit: "contain", // Ajuste de la imagen con el tamaño disponible
+    width: "300px",
+    height: "300px",
+    marginBottom: "20px",
+    objectFit: "contain",
+    borderRadius: "8px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
   },
   description: {
+    fontSize: "18px",
+    textAlign: "center",
+    color: "#444",
+    marginBottom: "10px",
+    fontWeight: "500",
+  },
+  integrant: {
     fontSize: "16px",
     textAlign: "center",
     color: "#666",
-    marginBottom: "10px",
-  },
-  integrant: {
-    fontSize: "14px",
-    textAlign: "center",
-    color: "#444",
+    marginBottom: "5px",
   },
   loader: {
     display: "flex",

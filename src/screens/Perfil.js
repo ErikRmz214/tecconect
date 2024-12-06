@@ -18,18 +18,20 @@ function Perfil() {
       const userId = localStorage.getItem("userId");
 
       if (userId) {
-        const response = await fetch(`http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/user/${userId}`);
+        const response = await fetch(
+          `http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/user/${userId}`
+        );
         if (!response.ok) {
           throw new Error("Error al obtener los datos del usuario.");
         }
         const data = await response.json();
 
         setUserInfo({
-          nombre: data.user.name || '',
-          correo: data.user.email || '',
-          password: data.user.password || '',
-          tecnologico: data.user.tec || '',
-          carrera: data.user.degree[0] || '',
+          nombre: data.user.name || "",
+          correo: data.user.email || "",
+          password: data.user.password || "",
+          tecnologico: data.user.tec || "",
+          carrera: data.user.degree[0] || "",
         });
       } else {
         throw new Error("No se encontró el ID de usuario.");
@@ -92,24 +94,29 @@ function Perfil() {
       const userId = localStorage.getItem("userId");
 
       if (userId) {
-        const response = await fetch(`http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/edit-user/${userId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: validatedInputs.nombre,
-            email: validatedInputs.correo,
-            password: validatedInputs.password,
-            tec: validatedInputs.tecnologico,
-            degree: [validatedInputs.carrera],
-          }),
-        });
+        const response = await fetch(
+          `http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/edit-user/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: validatedInputs.nombre,
+              email: validatedInputs.correo,
+              password: validatedInputs.password,
+              tec: validatedInputs.tecnologico,
+              degree: [validatedInputs.carrera],
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
           console.error("Error de la API:", errorData);
-          throw new Error(errorData.message || "Error al actualizar los datos del usuario.");
+          throw new Error(
+            errorData.message || "Error al actualizar los datos del usuario."
+          );
         }
 
         const data = await response.json();
@@ -146,14 +153,22 @@ function Perfil() {
     setUserInfo({ ...userInfo, [field]: value });
   };
 
+  const mergeStyles = (baseStyle, conditionalStyle) => ({
+    ...baseStyle,
+    ...(conditionalStyle || {}),
+  });
+
   return (
     <div style={styles.container}>
       <MaterialIcons style={styles.profileIcon} />
-      
+
       <div style={styles.infoContainer}>
         <p style={styles.fieldLabel}>Nombre</p>
         <input
-          style={[styles.infoText, editable && styles.editableField]}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.nombre}
           onChange={(e) => handleInputChange("nombre", e.target.value)}
           placeholder="Ingrese su nombre"
@@ -162,7 +177,10 @@ function Perfil() {
 
         <p style={styles.fieldLabel}>Correo</p>
         <input
-          style={[styles.infoText, editable && styles.editableField]}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.correo}
           onChange={(e) => handleInputChange("correo", e.target.value)}
           placeholder="Ingrese su correo"
@@ -172,7 +190,10 @@ function Perfil() {
 
         <p style={styles.fieldLabel}>Tecnológico</p>
         <input
-          style={[styles.infoText, editable && styles.editableField]}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.tecnologico}
           onChange={(e) => handleInputChange("tecnologico", e.target.value)}
           placeholder="Ingrese su tecnológico"
@@ -181,7 +202,10 @@ function Perfil() {
 
         <p style={styles.fieldLabel}>Carrera</p>
         <input
-          style={[styles.infoText, editable && styles.editableField]}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.carrera}
           onChange={(e) => handleInputChange("carrera", e.target.value)}
           placeholder="Ingrese su carrera"
@@ -190,7 +214,10 @@ function Perfil() {
 
         <p style={styles.fieldLabel}>Contraseña</p>
         <input
-          style={[styles.infoText, editable && styles.editableField]}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.password}
           onChange={(e) => handleInputChange("password", e.target.value)}
           placeholder="Ingrese su contraseña"

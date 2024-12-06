@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import LogoImage from './images/Logo.png'; // Ajusta la ruta según la ubicación de tu imagen
+
 
 // Importar las pantallas originales (Español)
 import Inicio from './screens/Inicio';
@@ -22,68 +24,143 @@ import Files from './screens/Files';
 import Winners from './screens/Winners';
 import Profile from './screens/Profile';
 
-// Estilos en línea
+// Estilos en línea integrados
 const styles = {
-  app: {
-    fontFamily: 'Arial, sans-serif',
-    textAlign: 'center',
-  },
   navbar: {
-    backgroundColor: '#282c34',
-    padding: '1rem',
+    backgroundColor: '#343a40',
+    padding: '1rem 2rem',
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+  },
+  logo: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    color: '#ff9800',
+  },
+  menuToggle: {
+    fontSize: '1.5rem',
+    color: 'white',
+    cursor: 'pointer',
+    display: 'none', // Se oculta por defecto
   },
   navbarLinks: {
     listStyle: 'none',
     display: 'flex',
-    gap: '1rem',
-    padding: 0,
+    gap: '1.5rem',
     margin: 0,
+    padding: 0,
   },
   navbarLink: {
     color: 'white',
     textDecoration: 'none',
-    fontWeight: 'bold',
+    fontWeight: 600,
+    transition: 'color 0.3s ease',
+  },
+  navbarLinkHover: {
+    color: '#ff9800',
+  },
+  activeLink: {
+    borderBottom: '2px solid #ff9800',
+  },
+  navbarLinksMobile: {
+    flexDirection: 'column',
+    backgroundColor: '#343a40',
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    padding: '1rem',
+    display: 'none',
+  },
+  showMenu: {
+    display: 'flex',
+  },
+  // Responsividad
+  '@media (max-width: 768px)': {
+    menuToggle: {
+      display: 'block', // Se muestra en pantallas pequeñas
+    },
+    navbarLinks: {
+      display: 'none', // Se ocultan los enlaces en pantallas pequeñas
+    },
+    navbarLinksMobile: {
+      display: 'flex', // Se muestran los enlaces cuando el menú está abierto
+    },
   },
 };
 
-// Barra de navegación en español
+// Navbar componente base
+function Navbar({ links, logo }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  return (
+    <nav style={styles.navbar}>
+      <span style={styles.logo}>{logo}</span>
+      <span style={styles.menuToggle} onClick={toggleMenu}>
+        ☰
+      </span>
+      <ul
+        style={{
+          ...styles.navbarLinks,
+          ...(menuOpen ? styles.showMenu : {}),
+          ...(menuOpen ? styles.navbarLinksMobile : {}),
+        }}
+      >
+        {links.map(({ to, label }) => (
+          <li key={to}>
+            <Link
+              to={to}
+              style={styles.navbarLink}
+              className={({ isActive }) =>
+                isActive ? styles.activeLink : undefined
+              }
+            >
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+// Navbar en Español
 function NavbarEs() {
-  return (
-    <nav style={styles.navbar}>
-      <ul style={styles.navbarLinks}>
-        <li><Link to="/principal" style={styles.navbarLink}>Principal</Link></li>
-        <li><Link to="/eventos" style={styles.navbarLink}>Eventos</Link></li>
-        <li><Link to="/archivos" style={styles.navbarLink}>Archivos</Link></li>
-        <li><Link to="/perfil" style={styles.navbarLink}>Perfil</Link></li>
-      </ul>
-    </nav>
-  );
+  const links = [
+    { to: '/principal', label: 'Principal' },
+    { to: '/eventos', label: 'Eventos' },
+    { to: '/archivos', label: 'Archivos' },
+    { to: '/ganadores', label: 'Ganadores' },
+    { to: '/perfil', label: 'Perfil' },
+  ];
+  return <Navbar links={links} logo={<img src={LogoImage} alt="TECCONECT Logo" className="logo-image" />} />;
 }
 
-// Barra de navegación en inglés
+
+// Navbar en Inglés
 function NavbarEn() {
-  return (
-    <nav style={styles.navbar}>
-      <ul style={styles.navbarLinks}>
-        <li><Link to="/main" style={styles.navbarLink}>Main</Link></li>
-        <li><Link to="/events" style={styles.navbarLink}>Events</Link></li>
-        <li><Link to="/files" style={styles.navbarLink}>Files</Link></li>
-        <li><Link to="/profile" style={styles.navbarLink}>Profile</Link></li>
-      </ul>
-    </nav>
-  );
+  const links = [
+    { to: '/main', label: 'Main' },
+    { to: '/events', label: 'Events' },
+    { to: '/files', label: 'Files' },
+    { to: '/winners', label: 'Winners' },
+    { to: '/profile', label: 'Profile' },
+  ];
+  return <Navbar links={links} logo={<img src={LogoImage} alt="TECCONECT Logo" className="logo-image" />} />;
 }
 
-// Componente para manejar las barras de navegación condicionales
+
+// Navegación condicional
 function Navigation() {
   const location = useLocation();
-
-  // Rutas para mostrar la barra en español
-  const spanishRoutes = ['/principal', '/eventos', '/archivos', '/perfil'];
-  // Rutas para mostrar la barra en inglés
-  const englishRoutes = ['/main', '/events', '/files', '/profile'];
+  const spanishRoutes = ['/principal', '/eventos', '/archivos', '/perfil', '/ganadores'];
+  const englishRoutes = ['/main', '/events', '/files', '/profile', '/winners'];
 
   if (spanishRoutes.includes(location.pathname)) {
     return <NavbarEs />;
@@ -93,14 +170,14 @@ function Navigation() {
     return <NavbarEn />;
   }
 
-  return null; // No mostrar barra de navegación
+  return null;
 }
 
 // Componente principal de la aplicación
 export default function App() {
   return (
     <Router>
-      <div style={styles.app}>
+      <div>
         {/* Barra de navegación condicional */}
         <Navigation />
 

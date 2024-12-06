@@ -17,13 +17,13 @@ function Archivos() {
   }, []);
 
   const handleSubmit = () => {
-    const integrantsArray = integrantes.split(",").map((item) => item.trim()); // Convertir a array
+    const integrantsArray = integrantes.split(",").map((item) => item.trim());
 
     const projectData = {
       name: nombre,
       description: descripcion,
       integrants: integrantsArray,
-      degree: "Grado", // Agregar aquí el grado si es necesario
+      degree: "Grado",
     };
 
     fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/new-proyect", {
@@ -35,8 +35,7 @@ function Archivos() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Proyecto creado:", data);
-        setProyectos((prevProyectos) => [...prevProyectos, data]); // Agregar el proyecto a la lista
+        setProyectos((prevProyectos) => [...prevProyectos, data]);
         alert("Proyecto creado con éxito!");
       })
       .catch((error) => {
@@ -47,67 +46,72 @@ function Archivos() {
 
   const handleProjectPress = (project) => {
     setCurrentProject(project);
-    setShowModal(true); // Mostrar la ventana modal con los detalles del proyecto
+    setShowModal(true);
   };
-
-  const renderProjectButton = (project) => (
-    <button style={styles.projectButton} onClick={() => handleProjectPress(project)}>
-      {project.name}
-    </button>
-  );
 
   return (
     <div style={styles.container}>
-      {/* Formulario */}
-      <label style={styles.label}>Nombre:</label>
-      <input
-        style={styles.input}
-        placeholder="Escribe el nombre"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-      />
+      <h1 style={styles.title}>Gestión de Proyectos</h1>
+      <p style={styles.subtitle}>Registra y gestiona tus proyectos fácilmente</p>
 
-      <label style={styles.label}>Descripción:</label>
-      <textarea
-        style={{ ...styles.input, ...styles.textArea }}
-        placeholder="Escribe la descripción"
-        value={descripcion}
-        onChange={(e) => setDescripcion(e.target.value)}
-      />
+      <div style={styles.form}>
+        <label style={styles.label}>Nombre:</label>
+        <input
+          style={styles.input}
+          placeholder="Nombre del proyecto"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+        />
 
-      <label style={styles.label}>Integrantes:</label>
-      <input
-        style={styles.input}
-        placeholder="Escribe los nombres de los integrantes"
-        value={integrantes}
-        onChange={(e) => setIntegrantes(e.target.value)}
-      />
+        <label style={styles.label}>Descripción:</label>
+        <textarea
+          style={{ ...styles.input, ...styles.textArea }}
+          placeholder="Descripción del proyecto"
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+        />
 
-      <button style={styles.button} onClick={handleSubmit}>
-        Enviar
-      </button>
+        <label style={styles.label}>Integrantes:</label>
+        <input
+          style={styles.input}
+          placeholder="Separar nombres por comas"
+          value={integrantes}
+          onChange={(e) => setIntegrantes(e.target.value)}
+        />
 
-      {/* Mostrar proyectos */}
-      <h3 style={styles.projectListTitle}>Proyectos creados:</h3>
-      <div>
-        {proyectos.map((project) => renderProjectButton(project))}
+        <button style={styles.button} onClick={handleSubmit}>
+          Registrar Proyecto
+        </button>
       </div>
 
-      {/* Modal para mostrar detalles del proyecto */}
+      <h2 style={styles.projectListTitle}>Proyectos Creados</h2>
+      <div style={styles.projectList}>
+        {proyectos.map((project) => (
+          <button
+            key={project.name}
+            style={styles.projectButton}
+            onClick={() => handleProjectPress(project)}
+          >
+            {project.name}
+          </button>
+        ))}
+      </div>
+
       {showModal && (
         <div style={styles.modalContainer}>
           <div style={styles.modalContent}>
             {currentProject && (
               <>
-                <h4 style={styles.modalTitle}>{currentProject.name}</h4>
-                <p>{`Descripción: ${currentProject.description}`}</p>
-                <p>{`Integrantes: ${currentProject.integrants.join(", ")}`}</p>
+                <h3 style={styles.modalTitle}>{currentProject.name}</h3>
+                <p style={styles.modalText}>
+                  <strong>Descripción:</strong> {currentProject.description}
+                </p>
+                <p style={styles.modalText}>
+                  <strong>Integrantes:</strong> {currentProject.integrants.join(", ")}
+                </p>
               </>
             )}
-            <button
-              style={styles.modalButton}
-              onClick={() => setShowModal(false)}
-            >
+            <button style={styles.modalButton} onClick={() => setShowModal(false)}>
               Cerrar
             </button>
           </div>
@@ -120,46 +124,86 @@ function Archivos() {
 const styles = {
   container: {
     padding: "20px",
-    backgroundColor: "#ffffff",
+    fontFamily: "'Roboto', sans-serif",
+    backgroundColor: "#f9f9f9",
+    minHeight: "100vh",
+  },
+  title: {
+    fontSize: "28px",
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#333",
+    marginBottom: "10px",
+  },
+  subtitle: {
+    fontSize: "16px",
+    textAlign: "center",
+    color: "#666",
+    marginBottom: "30px",
+  },
+  form: {
+    maxWidth: "600px",
+    margin: "0 auto",
+    backgroundColor: "#fff",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   },
   label: {
-    fontSize: "16px",
-    fontWeight: "bold",
-    marginBottom: "5px",
-    color: "#333",
+    fontSize: "14px",
+    color: "#555",
+    marginBottom: "8px",
+    display: "block",
   },
   input: {
-    borderWidth: "1px",
-    borderColor: "#ccc",
-    borderRadius: "5px",
+    width: "100%",
     padding: "10px",
     marginBottom: "15px",
-    backgroundColor: "#fff",
-    width: "100%",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+    fontSize: "14px",
   },
   textArea: {
-    height: "100px",
-    textAlignVertical: "top",
+    height: "80px",
   },
   button: {
-    backgroundColor: "#000080",
-    padding: "15px",
-    borderRadius: "5px",
+    width: "100%",
+    padding: "10px",
+    fontSize: "16px",
+    backgroundColor: "#007BFF",
     color: "#fff",
-    fontWeight: "bold",
+    border: "none",
+    borderRadius: "4px",
     cursor: "pointer",
+    marginTop: "10px",
+  },
+  buttonHover: {
+    backgroundColor: "#0056b3",
   },
   projectListTitle: {
-    marginTop: "20px",
-    fontSize: "18px",
-    fontWeight: "bold",
+    fontSize: "20px",
+    color: "#333",
+    textAlign: "center",
+    marginTop: "40px",
+  },
+  projectList: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+    gap: "10px",
+    margin: "20px auto",
+    maxWidth: "800px",
   },
   projectButton: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#fff",
+    border: "1px solid #ddd",
     padding: "10px",
-    borderRadius: "5px",
-    marginVertical: "5px",
+    borderRadius: "4px",
+    textAlign: "center",
     cursor: "pointer",
+    transition: "background-color 0.3s",
+  },
+  projectButtonHover: {
+    backgroundColor: "#f0f0f0",
   },
   modalContainer: {
     position: "fixed",
@@ -175,22 +219,27 @@ const styles = {
   modalContent: {
     backgroundColor: "#fff",
     padding: "20px",
-    borderRadius: "10px",
-    width: "300px",
+    borderRadius: "8px",
+    maxWidth: "400px",
     textAlign: "center",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.2)",
   },
   modalTitle: {
     fontSize: "18px",
-    fontWeight: "bold",
+    color: "#333",
+    marginBottom: "10px",
+  },
+  modalText: {
+    fontSize: "14px",
+    color: "#555",
     marginBottom: "10px",
   },
   modalButton: {
-    backgroundColor: "#000080",
     padding: "10px",
-    marginTop: "20px",
-    borderRadius: "5px",
+    backgroundColor: "#007BFF",
     color: "#fff",
-    fontWeight: "bold",
+    border: "none",
+    borderRadius: "4px",
     cursor: "pointer",
   },
 };

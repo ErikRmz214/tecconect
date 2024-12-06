@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Alert } from "react-bootstrap"; // Usando react-bootstrap para alertas
-import { FaUserCircle } from "react-icons/fa"; // Icono de perfil usando react-icons
-import { useNavigate } from "react-router-dom"; // Para manejar la navegación
-import '../styles/Profile.css'
+import { useNavigate } from "react-router-dom";
+import MaterialIcons from "@mui/icons-material/AccountCircle"; // Ensure this dependency is installed
 
 function Profile() {
   const [editable, setEditable] = useState(false);
@@ -10,10 +8,9 @@ function Profile() {
     name: "",
     email: "",
     password: "",
-    institution: "",
+    institute: "",
     degree: "",
   });
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const fetchUserData = async () => {
@@ -21,25 +18,27 @@ function Profile() {
       const userId = localStorage.getItem("userId");
 
       if (userId) {
-        const response = await fetch(`http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/user/${userId}`);
+        const response = await fetch(
+          `http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/user/${userId}`
+        );
         if (!response.ok) {
-          throw new Error("Error fetching user data.");
+          throw new Error("Error retrieving user data.");
         }
         const data = await response.json();
 
         setUserInfo({
-          name: data.user.name || '',
-          email: data.user.email || '',
-          password: data.user.password || '',
-          institution: data.user.tec || '',
-          degree: data.user.degree[0] || '',
+          name: data.user.name || "",
+          email: data.user.email || "",
+          password: data.user.password || "",
+          institute: data.user.tec || "",
+          degree: data.user.degree[0] || "",
         });
       } else {
         throw new Error("User ID not found.");
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
-      setErrorMessage("There was a problem retrieving the data.");
+      console.error("Error retrieving user data:", error);
+      window.alert("There was an issue retrieving the data.");
     }
   };
 
@@ -48,43 +47,39 @@ function Profile() {
   }, []);
 
   const validateInputs = () => {
-    const { name, email, password, institution, degree } = userInfo;
-    
-    // Trim inputs
+    const { name, email, password, institute, degree } = userInfo;
+
     const trimmedInputs = {
       name: name.trim(),
       email: email.trim(),
       password: password.trim(),
-      institution: institution.trim(),
-      degree: degree.trim()
+      institute: institute.trim(),
+      degree: degree.trim(),
     };
 
-    // Validation checks
     if (!trimmedInputs.name) {
-      setErrorMessage("Name cannot be empty.");
+      window.alert("Name cannot be empty.");
       return false;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!trimmedInputs.email || !emailRegex.test(trimmedInputs.email)) {
-      setErrorMessage("Please enter a valid email.");
+      window.alert("Please enter a valid email address.");
       return false;
     }
 
-    // Password validation
     if (!trimmedInputs.password || trimmedInputs.password.length < 6) {
-      setErrorMessage("Password must be at least 6 characters.");
+      window.alert("Password must be at least 6 characters.");
       return false;
     }
 
-    if (!trimmedInputs.institution) {
-      setErrorMessage("Institution cannot be empty.");
+    if (!trimmedInputs.institute) {
+      window.alert("Institute cannot be empty.");
       return false;
     }
 
     if (!trimmedInputs.degree) {
-      setErrorMessage("Degree cannot be empty.");
+      window.alert("Degree cannot be empty.");
       return false;
     }
 
@@ -92,7 +87,6 @@ function Profile() {
   };
 
   const handleSaveChanges = async () => {
-    // Validate inputs
     const validatedInputs = validateInputs();
     if (!validatedInputs) return;
 
@@ -100,58 +94,57 @@ function Profile() {
       const userId = localStorage.getItem("userId");
 
       if (userId) {
-        const response = await fetch(`http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/edit-user/${userId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: validatedInputs.name,
-            email: validatedInputs.email,
-            password: validatedInputs.password,
-            tec: validatedInputs.institution,
-            degree: [validatedInputs.degree],
-          }),
-        });
+        const response = await fetch(
+          `http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/edit-user/${userId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: validatedInputs.name,
+              email: validatedInputs.email,
+              password: validatedInputs.password,
+              tec: validatedInputs.institute,
+              degree: [validatedInputs.degree],
+            }),
+          }
+        );
 
-        // Check if response is successful
         if (!response.ok) {
           const errorData = await response.json();
-          console.error("API error:", errorData);
-          throw new Error(errorData.message || "Error updating user data.");
+          console.error("API Error:", errorData);
+          throw new Error(
+            errorData.message || "Error updating user data."
+          );
         }
 
         const data = await response.json();
         console.log("API response after update:", data);
 
-        // Reload updated data
         await fetchUserData();
-        
-        // Disable edit mode
+
         setEditable(false);
-        
-        // Show success message
-        setErrorMessage("Changes saved successfully.");
+
+        window.alert("Changes saved successfully.");
       } else {
         throw new Error("User ID not found.");
       }
     } catch (error) {
       console.error("Error updating data:", error);
-      setErrorMessage(error.message || "There was a problem saving the data.");
+      window.alert(error.message || "There was a problem saving the data.");
     }
   };
 
-  const signOut = () => {
+  const logout = () => {
     localStorage.removeItem("userId");
     navigate("/login");
   };
 
   const toggleEditable = () => {
     if (editable) {
-      // If in edit mode, try to save changes
       handleSaveChanges();
     } else {
-      // If not in edit mode, activate editing
       setEditable(true);
     }
   };
@@ -160,73 +153,136 @@ function Profile() {
     setUserInfo({ ...userInfo, [field]: value });
   };
 
+  const mergeStyles = (baseStyle, conditionalStyle) => ({
+    ...baseStyle,
+    ...(conditionalStyle || {}),
+  });
+
   return (
-    <div className="profile-container">
-      <FaUserCircle className="profile-icon" size={150} color="#000080" />
+    <div style={styles.container}>
+      <MaterialIcons style={styles.profileIcon} />
 
-      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}  {/* Error alert */}
-
-      <div className="info-container">
-        <label className="field-label">Name</label>
+      <div style={styles.infoContainer}>
+        <p style={styles.fieldLabel}>Name</p>
         <input
-          type="text"
-          className={`info-text ${editable && "editable-field"}`}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.name}
-          disabled={!editable}  // Cambié de editable a disabled
           onChange={(e) => handleInputChange("name", e.target.value)}
           placeholder="Enter your name"
+          disabled={!editable}
         />
 
-        <label className="field-label">Email</label>
+        <p style={styles.fieldLabel}>Email</p>
         <input
-          type="email"
-          className={`info-text ${editable && "editable-field"}`}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.email}
-          disabled={!editable}  // Cambié de editable a disabled
           onChange={(e) => handleInputChange("email", e.target.value)}
           placeholder="Enter your email"
+          type="email"
+          disabled={!editable}
         />
 
-        <label className="field-label">Institution</label>
+        <p style={styles.fieldLabel}>Institute</p>
         <input
-          type="text"
-          className={`info-text ${editable && "editable-field"}`}
-          value={userInfo.institution}
-          disabled={!editable}  // Cambié de editable a disabled
-          onChange={(e) => handleInputChange("institution", e.target.value)}
-          placeholder="Enter your institution"
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
+          value={userInfo.institute}
+          onChange={(e) => handleInputChange("institute", e.target.value)}
+          placeholder="Enter your institute"
+          disabled={!editable}
         />
 
-        <label className="field-label">Degree</label>
+        <p style={styles.fieldLabel}>Degree</p>
         <input
-          type="text"
-          className={`info-text ${editable && "editable-field"}`}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.degree}
-          disabled={!editable}  // Cambié de editable a disabled
           onChange={(e) => handleInputChange("degree", e.target.value)}
           placeholder="Enter your degree"
+          disabled={!editable}
         />
 
-        <label className="field-label">Password</label>
+        <p style={styles.fieldLabel}>Password</p>
         <input
-          type="password"
-          className={`info-text ${editable && "editable-field"}`}
+          style={mergeStyles(
+            styles.infoText,
+            editable ? styles.editableField : null
+          )}
           value={userInfo.password}
-          disabled={!editable}  // Cambié de editable a disabled
           onChange={(e) => handleInputChange("password", e.target.value)}
           placeholder="Enter your password"
+          type="password"
+          disabled={!editable}
         />
       </div>
 
-      <button className="edit-button" onClick={toggleEditable}>
-        {editable ? "Save" : "Edit"}
-      </button>
-
-      <button className="sign-out-button" onClick={signOut}>
-        Sign Out
-      </button>
+      <div style={styles.buttonContainer}>
+        <button style={styles.button} onClick={toggleEditable}>
+          {editable ? "Save changes" : "Edit profile"}
+        </button>
+        <button style={styles.button} onClick={logout}>
+          Log out
+        </button>
+      </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "20px",
+  },
+  profileIcon: {
+    fontSize: "100px",
+    marginBottom: "20px",
+  },
+  infoContainer: {
+    width: "100%",
+    maxWidth: "400px",
+    marginBottom: "20px",
+  },
+  fieldLabel: {
+    fontSize: "14px",
+    fontWeight: "bold",
+    marginBottom: "5px",
+  },
+  infoText: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "15px",
+    fontSize: "16px",
+  },
+  editableField: {
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+  },
+  buttonContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+    maxWidth: "400px",
+  },
+  button: {
+    backgroundColor: "#4CAF50",
+    color: "white",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+};
 
 export default Profile;

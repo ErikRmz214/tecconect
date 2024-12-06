@@ -17,19 +17,22 @@ function Entrar() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/node-firebase-example-fd01e/us-central1/app/api/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await response.json();
 
       if (response.status === 200) {
         alert("Inicio de sesión exitoso.");
-        localStorage.setItem('userId', data.user.id.toString());
+        localStorage.setItem("userId", data.user.id.toString());
         navigate("/principal", { state: { user: data.user } });
       } else {
         alert(data.message || "Credenciales inválidas.");
@@ -44,44 +47,47 @@ function Entrar() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Iniciar sesión</h1>
+      <div style={styles.card}>
+        <h1 style={styles.title}>Bienvenido</h1>
+        <p style={styles.subtitle}>Ingresa tus credenciales para continuar</p>
 
-      <input
-        type="email"
-        style={styles.input}
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <div style={styles.passwordContainer}>
         <input
-          type={showPassword ? "text" : "password"}
+          type="email"
           style={styles.input}
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
+
+        <div style={styles.passwordContainer}>
+          <input
+            type={showPassword ? "text" : "password"}
+            style={styles.input}
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            style={styles.eyeIcon}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "👁️" : "🔒"}
+          </button>
+        </div>
+
         <button
-          style={styles.eyeIcon}
-          onClick={() => setShowPassword(!showPassword)}
+          style={loading ? styles.buttonDisabled : styles.button}
+          onClick={handleLogin}
+          disabled={loading}
         >
-          {showPassword ? "Ocultar" : "Mostrar"}
+          {loading ? "Cargando..." : "Iniciar sesión"}
         </button>
-      </div>
 
-      <button
-        style={loading ? styles.buttonDisabled : styles.button}
-        onClick={handleLogin}
-        disabled={loading}
-      >
-        {loading ? "Cargando..." : "Iniciar sesión"}
-      </button>
-
-      <div style={styles.link}>
-        <button onClick={() => navigate("/inicio")} style={styles.linkText}>
-          Regresar
-        </button>
+        <div style={styles.link}>
+          <button onClick={() => navigate("/inicio")} style={styles.linkText}>
+            Regresar
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -89,83 +95,87 @@ function Entrar() {
 
 const styles = {
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '40px',
-    backgroundColor: '#f8f8f8',
-    height: '100vh',
-    textAlign: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    backgroundColor: "#f4f7fc",
+    fontFamily: "Arial, sans-serif",
+  },
+  card: {
+    width: "400px",
+    padding: "30px",
+    backgroundColor: "#ffffff",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
   },
   title: {
-    fontSize: '32px',
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: '30px',
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#333333",
+    marginBottom: "10px",
+  },
+  subtitle: {
+    fontSize: "14px",
+    color: "#777777",
+    marginBottom: "20px",
   },
   input: {
-    width: '80%',
-    padding: '12px',
-    marginBottom: '20px',
-    borderRadius: '8px',
-    border: '1px solid #ccc',
-    fontSize: '16px',
-    outline: 'none',
-    transition: 'border-color 0.3s',
-  },
-  inputFocus: {
-    borderColor: '#000080',
+    width: "100%",
+    padding: "12px",
+    marginBottom: "20px",
+    borderRadius: "5px",
+    border: "1px solid #cccccc",
+    fontSize: "16px",
+    outline: "none",
   },
   passwordContainer: {
-    position: 'relative',
-    width: '80%',
+    position: "relative",
+    width: "100%",
   },
   eyeIcon: {
-    position: 'absolute',
-    right: '10px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    background: 'transparent',
-    border: 'none',
-    color: '#000080',
-    fontSize: '16px',
-    cursor: 'pointer',
+    position: "absolute",
+    right: "10px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    background: "transparent",
+    border: "none",
+    fontSize: "16px",
+    cursor: "pointer",
   },
   button: {
-    backgroundColor: '#000080',
-    color: 'white',
-    padding: '15px 30px',
-    border: 'none',
-    borderRadius: '5px',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-    width: '80%',
-    marginTop: '20px',
+    width: "100%",
+    padding: "12px",
+    backgroundColor: "#0066cc",
+    color: "#ffffff",
+    fontSize: "16px",
+    fontWeight: "bold",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "pointer",
+    transition: "background-color 0.3s",
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
-    color: 'white',
-    padding: '15px 30px',
-    border: 'none',
-    borderRadius: '5px',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    cursor: 'not-allowed',
-    width: '80%',
-    marginTop: '20px',
+    width: "100%",
+    padding: "12px",
+    backgroundColor: "#cccccc",
+    color: "#ffffff",
+    fontSize: "16px",
+    fontWeight: "bold",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "not-allowed",
   },
   link: {
-    marginTop: '20px',
+    marginTop: "20px",
   },
   linkText: {
-    backgroundColor: 'transparent',
-    color: '#000080',
-    fontSize: '16px',
-    textDecoration: 'underline',
-    cursor: 'pointer',
+    backgroundColor: "transparent",
+    color: "#0066cc",
+    fontSize: "14px",
+    textDecoration: "underline",
+    cursor: "pointer",
   },
 };
 

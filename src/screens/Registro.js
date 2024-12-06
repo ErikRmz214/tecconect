@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importar el hook
 
-const Registro = ({ navigation }) => {
+const Registro = () => {
+  const navigate = useNavigate(); // Inicializar el hook de navegación
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -63,7 +66,7 @@ const Registro = ({ navigation }) => {
 
       if (response.ok) {
         alert('Éxito', 'Registrado con éxito');
-        navigation.navigate('Entrar');
+        navigate('/entrar'); // Cambiar la navegación aquí
       } else {
         setError(data.message || 'Hubo un error al registrar la cuenta');
       }
@@ -117,7 +120,7 @@ const Registro = ({ navigation }) => {
       </div>
 
       <select
-        style={styles.input}
+        style={styles.select}
         value={selectedTecnologico}
         onChange={(e) => {
           setSelectedTecnologico(e.target.value);
@@ -133,19 +136,17 @@ const Registro = ({ navigation }) => {
       {selectedTecnologico && (
         <div>
           <h2 style={styles.subTitle}>Elige tu carrera</h2>
-          {tecnologicos
-            .find((tecnologico) => tecnologico.name === selectedTecnologico)?.degree?.map((carrera, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedCarrera(carrera)}
-                style={{
-                  ...styles.carreraOption,
-                  ...(selectedCarrera === carrera ? styles.selectedCarrera : {}),
-                }}
-              >
-                {carrera}
-              </button>
-            )) || <p>No hay carreras disponibles</p>}
+          <select
+            style={styles.select}
+            value={selectedCarrera}
+            onChange={(e) => setSelectedCarrera(e.target.value)}
+          >
+            <option value="">Selecciona una carrera</option>
+            {tecnologicos
+              .find((tecnologico) => tecnologico.name === selectedTecnologico)?.degree?.map((carrera, index) => (
+                <option key={index} value={carrera}>{carrera}</option>
+              )) || <option>No hay carreras disponibles</option>}
+          </select>
         </div>
       )}
 
@@ -153,9 +154,7 @@ const Registro = ({ navigation }) => {
         <button onClick={handleRegister} style={styles.button}>Registrar</button>
       </div>
 
-      <button onClick={() => navigation.navigate('Inicio')} style={styles.link}>
-        Regresar
-      </button>
+      <button onClick={() => navigate('/inicio')} style={styles.link}>Regresar</button>
     </div>
   );
 };
@@ -165,45 +164,64 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '20px',
+    padding: '30px',
+    maxWidth: '450px',
+    margin: 'auto',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   title: {
-    fontSize: '24px',
+    fontSize: '28px',
     marginBottom: '20px',
+    textAlign: 'center',
+    fontWeight: '600',
+    color: '#333',
   },
   input: {
     width: '100%',
-    padding: '10px',
+    padding: '12px 15px',
     marginBottom: '15px',
     borderWidth: '1px',
-    borderRadius: '5px',
+    borderRadius: '6px',
+    fontSize: '16px',
+    backgroundColor: '#fff',
+    boxSizing: 'border-box',
+    borderColor: '#ccc',
+    transition: 'border-color 0.3s',
+  },
+  select: {
+    width: '100%',
+    padding: '12px 15px',
+    marginBottom: '15px',
+    borderWidth: '1px',
+    borderRadius: '6px',
+    fontSize: '16px',
+    backgroundColor: '#fff',
+    boxSizing: 'border-box',
+    borderColor: '#ccc',
+    transition: 'border-color 0.3s',
   },
   subTitle: {
     fontSize: '18px',
     marginBottom: '10px',
+    fontWeight: '500',
     textAlign: 'center',
-  },
-  carreraOption: {
-    padding: '10px',
-    borderWidth: '1px',
-    borderRadius: '5px',
-    marginBottom: '5px',
-  },
-  selectedCarrera: {
-    backgroundColor: '#cce5ff',
+    color: '#333',
   },
   buttonContainer: {
     width: '100%',
-    marginTop: '10px',
-    marginBottom: '20px',
+    marginTop: '20px',
   },
   error: {
     color: 'red',
-    marginBottom: '10px',
+    marginBottom: '15px',
+    fontSize: '14px',
+    textAlign: 'center',
   },
   link: {
-    marginTop: '20px',
-    color: 'blue',
+    marginTop: '15px',
+    color: '#007BFF',
     textDecoration: 'underline',
     fontSize: '16px',
   },
@@ -218,6 +236,18 @@ const styles = {
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
+    color: '#007BFF',
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    color: 'white',
+    padding: '12px 20px',
+    borderRadius: '6px',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '16px',
+    width: '100%',
+    transition: 'background-color 0.3s',
   },
 };
 

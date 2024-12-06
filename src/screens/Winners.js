@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Alert, ScrollView } from "react";
-import ConfettiCannon from "react-confetti"; // Asegúrate de tener esta dependencia instalada
-
-// Importar la imagen local
-import LocalImage from "../images/Ganador.jpg";
+import { CircularProgress } from "@mui/material";
+import Confetti from 'react-confetti'; // Import the confetti library
 
 function Winners() {
   const [winner, setWinner] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Confetti configuration
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
   useEffect(() => {
     const fetchWinner = async () => {
       try {
-        // Simulando una respuesta de API
         const data = {
-          event: "2024-12-01",
+          event: "2024-12-01", // Event date
           name: "Innovative Project",
           integrants: ["Juan Pérez", "María García", "Luis Gómez"],
         };
         setWinner(data);
       } catch (error) {
-        window.alert("Error: Could not load winner information.");
+        alert("Unable to load winner information.");
         console.error("Error loading winner:", error);
       } finally {
         setLoading(false);
@@ -33,7 +33,7 @@ function Winners() {
   if (loading) {
     return (
       <div style={styles.loader}>
-        <ActivityIndicator size="large" color="#1E90FF" />
+        <CircularProgress size={50} color="primary" />
       </div>
     );
   }
@@ -41,20 +41,21 @@ function Winners() {
   if (!winner) {
     return (
       <div style={styles.container}>
-        <h1 style={styles.title}>No winner information found.</h1>
+        <h2>No winner information found.</h2>
       </div>
     );
   }
 
-  const eventDate = new Date(winner.event).toLocaleDateString();
+  const eventDate = new Date(winner.event).toLocaleDateString("en-US");
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <h1 style={styles.title}>Winners</h1>
+    <div style={styles.container}>
+      <h2 style={styles.title}>Winners</h2>
+      {winner && <Confetti width={windowWidth} height={windowHeight} />}
       <img
         style={styles.image}
-        src={LocalImage}
-        alt="Winner"
+        src={require("../images/Winner.jpg")}
+        alt="Winner image"
       />
       <p style={styles.description}>Event: {eventDate}</p>
       <p style={styles.description}>Project Name: {winner.name}</p>
@@ -64,50 +65,54 @@ function Winners() {
           - {integrant}
         </p>
       ))}
-      <ConfettiCannon
-        numberOfPieces={200}
-        recycle={false}
-        gravity={0.05}
-      />
-    </ScrollView>
+    </div>
   );
 }
 
 const styles = {
   container: {
-    flexGrow: 1,
+    display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
+    padding: "16px",
     backgroundColor: "#f5f5f5",
+    fontFamily: "'Roboto', sans-serif",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    borderRadius: "8px",
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+    fontSize: "28px",
+    fontWeight: "600",
+    marginBottom: "20px",
     color: "#333",
   },
   image: {
-    width: 300,  // Imagen más grande
-    height: 300, // Imagen más grande
-    marginBottom: 20, // Espaciado en la parte inferior
-    objectFit: "contain", // Asegura que la imagen se ajuste dentro de sus dimensiones
+    width: "300px",
+    height: "300px",
+    marginBottom: "20px",
+    objectFit: "contain",
+    borderRadius: "8px",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
   },
   description: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 10,
-  },
-  integrant: {
-    fontSize: 14,
+    fontSize: "18px",
     textAlign: "center",
     color: "#444",
+    marginBottom: "10px",
+    fontWeight: "500",
+  },
+  integrant: {
+    fontSize: "16px",
+    textAlign: "center",
+    color: "#666",
+    marginBottom: "5px",
   },
   loader: {
-    flex: 1,
+    display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    height: "100vh",
     backgroundColor: "#f5f5f5",
   },
 };
